@@ -40,3 +40,9 @@ npm install ts-node --save-dev
 Rodar testes
 npm run test
 npm run test -- --watchAll
+
+Instalar lodash
+npm install lodash
+
+Instalar @types/lodash
+npm install @types/lodash -D
