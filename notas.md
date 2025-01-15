@@ -35,3 +35,8 @@ The following questions will help Jest to create a suitable configuration for yo
 
 Instalar ts-node
 npm install ts-node --save-dev
+
+
+Rodar testes
+npm run test
+npm run test -- --watchAll
