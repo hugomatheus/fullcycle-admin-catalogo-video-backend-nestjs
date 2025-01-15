@@ -46,3 +46,9 @@ npm install lodash
 
 Instalar @types/lodash
 npm install @types/lodash -D
+
+Instalar uuid
+npm install uuid
+
+Instalar @types/uuid
+npm install @types/uuid -D
