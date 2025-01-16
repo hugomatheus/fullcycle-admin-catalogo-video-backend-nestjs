@@ -54,3 +54,13 @@ npm install uuid
 Instalar @types/uuid
 npm install @types/uuid -D
 
+Instalar class-validator
+npm install class-validator
+
+Habilitar no tsconfig utilização de decorators
+"experimentalDecorators": true, 
+"emitDecoratorMetadata": true,
+
+Desabilitando no tsconfig null checks
+"strictNullChecks": false, 
+
