@@ -40,6 +40,7 @@ npm install ts-node --save-dev
 Rodar testes
 npm run test
 npm run test -- --watchAll
+npm run test -- --verbose
 
 Instalar lodash
 npm install lodash
@@ -52,3 +53,4 @@ npm install uuid
 
 Instalar @types/uuid
 npm install @types/uuid -D
+
