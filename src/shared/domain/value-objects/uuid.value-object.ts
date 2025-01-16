@@ -20,6 +20,10 @@ export class Uuid extends ValueObject {
     }
   }
 
+  toString() {
+    return this.id;
+  }
+
   static create(id?: string): Uuid {
     return new Uuid(id);
   }
@@ -27,6 +31,6 @@ export class Uuid extends ValueObject {
 
 export class InvalidUuidError extends Error {
   constructor(message?: string) {
-    super(message || 'ID must be a valid UUID');
+    super(message || "ID must be a valid UUID");
   }
 }
