@@ -3,6 +3,10 @@ import { Category } from "../category.entity";
 import { validate as uuidValidate } from "uuid";
 
 describe("Category Unit Tests", () => {
+  let validateSpy: any;
+  beforeEach(() => {
+    validateSpy = jest.spyOn(Category, "validate");
+  });
   test("constructor", () => {
     let category = new Category({
       name: "Movie",
@@ -54,6 +58,7 @@ describe("Category Unit Tests", () => {
       expect(category.description).toBeNull();
       expect(category.isActive).toBe(true);
       expect(category.createdAt).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
 
     test('should create a category with description', () => {
@@ -67,6 +72,7 @@ describe("Category Unit Tests", () => {
       expect(category.description).toBe('some description');
       expect(category.isActive).toBe(true);
       expect(category.createdAt).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
 
     test('should create a category with is_active', () => {
@@ -80,6 +86,7 @@ describe("Category Unit Tests", () => {
       expect(category.description).toBeNull();
       expect(category.isActive).toBe(false);
       expect(category.createdAt).toBeInstanceOf(Date);
+      expect(validateSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -109,6 +116,7 @@ describe("Category Unit Tests", () => {
     });
     category.changeName('other name');
     expect(category.name).toBe('other name');
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   });
 
   test('should change description', () => {
@@ -117,6 +125,7 @@ describe("Category Unit Tests", () => {
     });
     category.changeDescription('some description');
     expect(category.description).toBe('some description');
+    expect(validateSpy).toHaveBeenCalledTimes(2);
   });
 
   test('should active a category', () => {
@@ -125,6 +134,7 @@ describe("Category Unit Tests", () => {
       isActive: false,
     });
     category.activate();
+    expect(category.isActive).toBeTruthy();
   });
 
   test('should disable a category', () => {
@@ -133,5 +143,6 @@ describe("Category Unit Tests", () => {
       isActive: true,
     });
     category.deactivate();
+    expect(category.isActive).toBeFalsy();
   });
 });
