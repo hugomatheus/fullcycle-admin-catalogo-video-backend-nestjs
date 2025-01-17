@@ -64,3 +64,6 @@ Habilitar no tsconfig utilização de decorators
 Desabilitando no tsconfig null checks
 "strictNullChecks": false, 
 
+Testes envolvendo classe abstrata:
+utilizando tecnica stub por não poder instanciar deve ser criado um stub
+
