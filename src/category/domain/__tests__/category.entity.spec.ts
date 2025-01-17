@@ -1,4 +1,4 @@
-import { Uuid } from "../../shared/domain/value-objects/uuid.value-object";
+import { Uuid } from "../../../shared/domain/value-objects/uuid.value-object";
 import { Category } from "../category.entity";
 import { validate as uuidValidate } from "uuid";
 
