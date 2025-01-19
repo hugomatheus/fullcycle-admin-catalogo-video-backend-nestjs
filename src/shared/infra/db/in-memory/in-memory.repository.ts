@@ -1,6 +1,11 @@
 import { Entity } from "../../../domain/entity";
 import { NotFoundError } from "../../../domain/errors/not-found.error";
-import { IRepository } from "../../../domain/repository/repository.interface";
+import {
+  IRepository,
+  ISeachableRepository,
+} from "../../../domain/repository/repository.interface";
+import { SearchParams } from "../../../domain/repository/search-params";
+import { SearchResult } from "../../../domain/repository/search-result";
 import { ValueObject } from "../../../domain/value-object";
 
 export abstract class InMemoryRepository<
@@ -42,4 +47,76 @@ export abstract class InMemoryRepository<
     return this.items;
   }
   abstract getEntity(): new (...args: any[]) => E;
+}
+
+export abstract class InMemorySearchableRepository<
+    E extends Entity,
+    EntityId extends ValueObject,
+    Filter = string
+  >
+  extends InMemoryRepository<E, EntityId>
+  implements ISeachableRepository<E, EntityId, Filter>
+{
+  sortableFields: string[] = [];
+  async search(props: SearchParams<Filter>): Promise<SearchResult<E>> {
+    const itemsFiltered = await this.applyFilter(this.items, props.filter);
+    const itemsSorted = this.applySort(
+      itemsFiltered,
+      props.sort,
+      props.sortDir
+    );
+    const itemsPaginated = this.applyPaginate(
+      itemsSorted,
+      props.page,
+      props.perPage
+    );
+    return new SearchResult({
+      items: itemsPaginated,
+      total: itemsFiltered.length,
+      currentPage: props.page,
+      perPage: props.perPage,
+    });
+  }
+
+  protected abstract applyFilter(
+    items: E[],
+    filter: Filter | null
+  ): Promise<E[]>;
+
+  protected applyPaginate(
+    items: E[],
+    page: SearchParams["page"],
+    perPage: SearchParams["perPage"]
+  ): E[] {
+    const start = (page - 1) * perPage; // 0 * 15 = 0
+    const limit = start + perPage; // 0 + 15 = 15
+    return items.slice(start, limit);
+  }
+
+  protected applySort(
+    items: E[],
+    sort: SearchParams["sort"],
+    sortDir: SearchParams["sortDir"],
+    customGetter?: (sort: string, item: E) => any
+  ) {
+    if (!sort || !this.sortableFields.includes(sort)) {
+      return items;
+    }
+
+    return [...items].sort((a, b) => {
+      //@ts-ignore
+      const aValue = customGetter ? customGetter(sort, a) : a[sort];
+      //@ts-ignore
+      const bValue = customGetter ? customGetter(sort, b) : b[sort];
+      if (aValue < bValue) {
+        return sortDir === "asc" ? -1 : 1;
+      }
+
+      if (aValue > bValue) {
+        return sortDir === "asc" ? 1 : -1;
+      }
+
+      return 0;
+    });
+  }
 }
