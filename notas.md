@@ -76,3 +76,6 @@ npm install sequelize
 npm install sequelize-typescript
 npm install @types/sequelize --save-dev
 
+Instalando sqlite3
+npm install sqlite3
+
