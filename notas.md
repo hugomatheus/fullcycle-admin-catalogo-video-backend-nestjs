@@ -71,3 +71,8 @@ Instalando Chance
 npm i chance --save-dev
 npm i --save-dev @types/chance
 
+Instalando sequelize
+npm install sequelize
+npm install sequelize-typescript
+npm install @types/sequelize --save-dev
+
