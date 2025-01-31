@@ -68,6 +68,6 @@ Testes envolvendo classe abstrata:
 utilizando tecnica stub por não poder instanciar deve ser criado um stub
 
 Instalando Chance
-npm i chance
+npm i chance --save-dev
 npm i --save-dev @types/chance
 
