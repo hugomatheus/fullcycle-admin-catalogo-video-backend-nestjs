@@ -1,5 +1,5 @@
-import { IRepository } from "../../shared/domain/repository/repository.interface";
+import { ISeachableRepository } from "../../shared/domain/repository/repository.interface";
 import { Uuid } from "../../shared/domain/value-objects/uuid.value-object";
 import { Category } from "./category.entity";
 
-export interface ICategoryRepository extends IRepository<Category, Uuid> {}
+export interface ICategoryRepository extends ISeachableRepository<Category, Uuid> {}

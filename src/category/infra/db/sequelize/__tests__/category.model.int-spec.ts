@@ -23,7 +23,6 @@ describe("CategoryModel Integration Tests", () => {
 
   test("mapping props", () => {
     const attributesMap = CategoryModel.getAttributes();
-    console.log(attributesMap);
     const attributes = Object.keys(CategoryModel.getAttributes());
 
     expect(attributes).toStrictEqual([
