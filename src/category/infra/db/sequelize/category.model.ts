@@ -18,9 +18,9 @@ export class CategoryModel extends Model {
   @Column({ type: DataType.TEXT, allowNull: true })
   declare description: string | null;
 
-  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  @Column({ type: DataType.BOOLEAN, field: 'is_active', allowNull: false })
   declare isActive: boolean;
 
-  @Column({ type: DataType.DATE(3), allowNull: false })
+  @Column({ type: DataType.DATE(3), field: 'created_at', allowNull: false })
   declare createdAt: Date;
 }
