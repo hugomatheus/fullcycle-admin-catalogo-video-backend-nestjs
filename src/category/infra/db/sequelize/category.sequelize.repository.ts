@@ -60,13 +60,17 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     if (!categoryModel) {
       throw new NotFoundError(entityId.id, this.getEntity());
     }
-    this.categoryModel.destroy({ where: { categoryId: entityId.id } });
+    await this.categoryModel.destroy({ where: { categoryId: entityId.id } });
   }
 
   async findById(entityId: Uuid): Promise<Category | null> {
     const categoryModel = await this.categoryModel.findByPk(entityId.id);
+
+    if (!categoryModel) {
+      return null;
+    }
     return new Category({
-      categoryId: new Uuid(categoryModel.id),
+      categoryId: new Uuid(categoryModel.categoryId),
       name: categoryModel.name,
       description: categoryModel.description,
       isActive: categoryModel.isActive,
@@ -79,7 +83,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     return categoriesModel.map(
       (categoryModel) =>
         new Category({
-          categoryId: new Uuid(categoryModel.id),
+          categoryId: new Uuid(categoryModel.categoryId),
           name: categoryModel.name,
           description: categoryModel.description,
           isActive: categoryModel.isActive,
@@ -108,7 +112,7 @@ export class CategorySequelizeRepository implements ICategoryRepository {
       items: rows.map(
         (categoryModel) =>
           new Category({
-            categoryId: new Uuid(categoryModel.id),
+            categoryId: new Uuid(categoryModel.categoryId),
             name: categoryModel.name,
             description: categoryModel.description,
             isActive: categoryModel.isActive,
