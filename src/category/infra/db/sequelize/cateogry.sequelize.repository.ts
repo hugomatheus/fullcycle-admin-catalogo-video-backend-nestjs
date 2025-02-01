@@ -1,9 +1,12 @@
-import { Entity } from "../../../../shared/domain/entity";
-import { SearchParams } from "../../../../shared/domain/repository/search-params";
-import { SearchResult } from "../../../../shared/domain/repository/search-result";
+import { Op } from "sequelize";
+import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
 import { Uuid } from "../../../../shared/domain/value-objects/uuid.value-object";
 import { Category } from "../../../domain/category.entity";
-import { ICategoryRepository } from "../../../domain/category.repository";
+import {
+  CategorySearchParams,
+  CategorySearchResult,
+  ICategoryRepository,
+} from "../../../domain/category.repository";
 import { CategoryModel } from "./category.model";
 
 export class CategorySequelizeRepository implements ICategoryRepository {
@@ -33,12 +36,31 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     );
   }
 
-  update(entity: Category): Promise<void> {
-    throw new Error("Method not implemented.");
+  async update(entity: Category): Promise<void> {
+    const id = entity.categoryId.id;
+    const categoryModel = await this.categoryModel.findByPk(id);
+    if (!categoryModel) {
+      throw new NotFoundError(id, this.getEntity());
+    }
+
+    await this.categoryModel.update(
+      {
+        categoryId: id,
+        name: entity.name,
+        description: entity.description,
+        isActive: entity.isActive,
+        createdAt: entity.createdAt,
+      },
+      { where: { categoryId: id } }
+    );
   }
 
-  delete(entityId: Uuid): Promise<void> {
-    throw new Error("Method not implemented.");
+  async delete(entityId: Uuid): Promise<void> {
+    const categoryModel = await this.categoryModel.findByPk(entityId.id);
+    if (!categoryModel) {
+      throw new NotFoundError(entityId.id, this.getEntity());
+    }
+    this.categoryModel.destroy({ where: { categoryId: entityId.id } });
   }
 
   async findById(entityId: Uuid): Promise<Category | null> {
@@ -66,11 +88,40 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     );
   }
 
-  search(props: SearchParams<string>): Promise<SearchResult<Entity>> {
-    throw new Error("Method not implemented.");
+  async search(props: CategorySearchParams): Promise<CategorySearchResult> {
+    const { rows, count } = await this.categoryModel.findAndCountAll({
+      ...(props.filter && {
+        where: {
+          name: { [Op.like]: `%${props.filter}%` },
+        },
+      }),
+      ...(props.sort && this.sortableFields.includes(props.sort)
+        ? {
+            order: [[props.sort, props.sortDir]],
+          }
+        : { order: [["createdAt", "desc"]] }),
+      offset: (props.page - 1) * props.perPage,
+      limit: props.perPage,
+    });
+
+    return new CategorySearchResult({
+      items: rows.map(
+        (categoryModel) =>
+          new Category({
+            categoryId: new Uuid(categoryModel.id),
+            name: categoryModel.name,
+            description: categoryModel.description,
+            isActive: categoryModel.isActive,
+            createdAt: categoryModel.createdAt,
+          })
+      ),
+      total: count,
+      currentPage: props.page,
+      perPage: props.perPage,
+    });
   }
 
   getEntity(): new (...args: any[]) => Category {
-    throw new Error("Method not implemented.");
+    return Category;
   }
 }
