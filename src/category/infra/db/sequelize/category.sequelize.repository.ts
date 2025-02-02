@@ -16,15 +16,15 @@ export class CategorySequelizeRepository implements ICategoryRepository {
   constructor(private categoryModel: typeof CategoryModel) {}
 
   async insert(entity: Category): Promise<void> {
-    const model = CategoryModelMapper.toModel(entity);
-    await this.categoryModel.create(model.toJSON());
+    const modelProps = CategoryModelMapper.toModel(entity);
+    await this.categoryModel.create(modelProps.toJSON());
   }
 
   async bulkInsert(entities: Category[]): Promise<void> {
-    const models = entities.map((entity) =>
-      CategoryModelMapper.toModel(entity)
+    const modelsProps = entities.map((entity) =>
+      CategoryModelMapper.toModel(entity).toJSON()
     );
-    await this.categoryModel.bulkCreate(models);
+    await this.categoryModel.bulkCreate(modelsProps);
   }
 
   async update(entity: Category): Promise<void> {
@@ -33,8 +33,8 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     if (!categoryModel) {
       throw new NotFoundError(id, this.getEntity());
     }
-    const modelToUpdate = CategoryModelMapper.toModel(entity);
-    await this.categoryModel.update(modelToUpdate.toJSON(), {
+    const modelProps = CategoryModelMapper.toModel(entity);
+    await this.categoryModel.update(modelProps.toJSON(), {
       where: { categoryId: id },
     });
   }
@@ -54,7 +54,9 @@ export class CategorySequelizeRepository implements ICategoryRepository {
 
   async findAll(): Promise<Category[]> {
     const categoriesModel = await this.categoryModel.findAll();
-    return categoriesModel.map((categoryModel) => CategoryModelMapper.toEntity(categoryModel));
+    return categoriesModel.map((categoryModel) =>
+      CategoryModelMapper.toEntity(categoryModel)
+    );
   }
 
   async search(props: CategorySearchParams): Promise<CategorySearchResult> {
@@ -74,15 +76,8 @@ export class CategorySequelizeRepository implements ICategoryRepository {
     });
 
     return new CategorySearchResult({
-      items: rows.map(
-        (categoryModel) =>
-          new Category({
-            categoryId: new Uuid(categoryModel.categoryId),
-            name: categoryModel.name,
-            description: categoryModel.description,
-            isActive: categoryModel.isActive,
-            createdAt: categoryModel.createdAt,
-          })
+      items: rows.map((categoryModel) =>
+        CategoryModelMapper.toEntity(categoryModel)
       ),
       total: count,
       currentPage: props.page,
