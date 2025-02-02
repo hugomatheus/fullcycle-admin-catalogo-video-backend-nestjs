@@ -79,3 +79,6 @@ npm install @types/sequelize --save-dev
 Instalando sqlite3
 npm install sqlite3
 
+Instalando dotenv
+npm install dotenv
+
