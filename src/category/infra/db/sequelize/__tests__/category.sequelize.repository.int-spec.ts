@@ -9,7 +9,7 @@ import { CategoryModelMapper } from "../category.model.mapper";
 import { setupSequelize } from "../../../../../shared/infra/testing/helpers.sequelize";
 
 describe("CategorySequelizeRepository Integration Test", () => {
-  setupSequelize({ models: [CategoryModel] });
+  setupSequelize({ models: [CategoryModel], logging: false });
   let repository: CategorySequelizeRepository;
   beforeEach(async () => {
     repository = new CategorySequelizeRepository(CategoryModel);

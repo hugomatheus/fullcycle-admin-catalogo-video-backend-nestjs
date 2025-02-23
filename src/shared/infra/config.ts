@@ -5,7 +5,6 @@ export class Config {
   static env: any = null;
   
   static db() {
-    console.log(process.env.NODE_ENV);
     Config.readEnv();
 
     return {
