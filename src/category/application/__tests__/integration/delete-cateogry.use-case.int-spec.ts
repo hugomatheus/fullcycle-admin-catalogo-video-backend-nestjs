@@ -1,5 +1,8 @@
 import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../../shared/domain/value-objects/uuid.value-object";
+import {
+  InvalidUuidError,
+  Uuid,
+} from "../../../../shared/domain/value-objects/uuid.value-object";
 import { setupSequelize } from "../../../../shared/infra/testing/helpers.sequelize";
 import { Category } from "../../../domain/category.entity";
 import { CategoryModel } from "../../../infra/db/sequelize/category.model";
@@ -18,8 +21,11 @@ describe("DeleteCategoryUseCase Integration tests", () => {
   });
 
   it("should throw delete a category", async () => {
+    await expect(() => useCase.execute({ id: "fake id" })).rejects.toThrow(
+      new InvalidUuidError()
+    );
     const uuid = new Uuid();
-    await expect(useCase.execute({id: uuid.id})).rejects.toThrow(
+    await expect(useCase.execute({ id: uuid.id })).rejects.toThrow(
       new NotFoundError(uuid, Category)
     );
   });

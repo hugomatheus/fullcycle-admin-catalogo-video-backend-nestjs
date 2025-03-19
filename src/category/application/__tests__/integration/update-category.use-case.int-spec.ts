@@ -1,5 +1,8 @@
 import { NotFoundError } from "../../../../shared/domain/errors/not-found.error";
-import { Uuid } from "../../../../shared/domain/value-objects/uuid.value-object";
+import {
+  InvalidUuidError,
+  Uuid,
+} from "../../../../shared/domain/value-objects/uuid.value-object";
 import { setupSequelize } from "../../../../shared/infra/testing/helpers.sequelize";
 import { Category } from "../../../domain/category.entity";
 import { CategoryModel } from "../../../infra/db/sequelize/category.model";
@@ -37,6 +40,10 @@ describe("UpdateCategoryUseCase Integration Test", () => {
   });
 
   it("should throw NotFoundError", async () => {
+    await expect(() =>
+      useCase.execute({ id: "fake id", name: "fake" })
+    ).rejects.toThrow(new InvalidUuidError());
+
     const input: UpdateCategoryInput = {
       id: new Uuid().id,
       name: "Movie",
