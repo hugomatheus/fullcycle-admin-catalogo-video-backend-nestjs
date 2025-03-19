@@ -38,7 +38,7 @@ export class UpdateCategoryUseCase implements IUseCase<UpdateCategoryInput, Upda
 
 export type UpdateCategoryInput = {
     id: string;
-    name?: string;
+    name: string;
     description?: string;
     isActive?: boolean;
 }
