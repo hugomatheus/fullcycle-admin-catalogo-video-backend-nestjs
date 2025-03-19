@@ -4,6 +4,22 @@ import { Category } from "../../../domain/category.entity";
 import { CategoryInMemoryRepository } from "../../../infra/db/in-memory/category-in-memory.repository";
 import { UpdateCategoryInput, UpdateCategoryUseCase } from "../../update-category.use-case";
 
+type Arrange = {
+    input: {
+        id: string;
+        name: string;
+        description?: string | null;
+        isActive?: boolean
+    };
+    expected: {
+        id: string;
+        name: string;
+        description: string | null;
+        isActive: boolean;
+        createdAt: Date;
+    };
+};
+
 describe('UpdateCategoryUseCase Units Test', () => {
     let repository: CategoryInMemoryRepository;
     let useCase: UpdateCategoryUseCase;
@@ -42,22 +58,6 @@ describe('UpdateCategoryUseCase Units Test', () => {
             isActive: true,
             createdAt: entity.createdAt,
         });
-
-        type Arrange = {
-            input: {
-                id: string;
-                name: string;
-                description?: string | null;
-                isActive?: boolean
-            };
-            expected: {
-                id: string;
-                name: string;
-                description: string | null;
-                isActive: boolean;
-                createdAt: Date;
-            };
-        };
 
         const arrange: Arrange[] = [
             {

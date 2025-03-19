@@ -2,10 +2,25 @@ import { NotFoundError } from "../../../../shared/domain/errors/not-found.error"
 import { Uuid } from "../../../../shared/domain/value-objects/uuid.value-object";
 import { setupSequelize } from "../../../../shared/infra/testing/helpers.sequelize";
 import { Category } from "../../../domain/category.entity";
-import { CategoryInMemoryRepository } from "../../../infra/db/in-memory/category-in-memory.repository";
 import { CategoryModel } from "../../../infra/db/sequelize/category.model";
 import { CategorySequelizeRepository } from "../../../infra/db/sequelize/category.sequelize.repository";
 import { UpdateCategoryInput, UpdateCategoryUseCase } from "../../update-category.use-case";
+
+type Arrange = {
+    input: {
+        id: string;
+        name: string;
+        description?: string | null;
+        isActive?: boolean
+    };
+    expected: {
+        id: string;
+        name: string;
+        description: string | null;
+        isActive: boolean;
+        createdAt: Date;
+    };
+};
 
 describe('UpdateCategoryUseCase Integration Test', () => {
     let repository: CategorySequelizeRepository;
