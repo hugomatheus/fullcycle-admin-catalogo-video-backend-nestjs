@@ -41,7 +41,7 @@ describe('UpdateCategoryUseCase Units Test', () => {
     it('should update a category', async () => {
         const spyUpdate = jest.spyOn(repository, 'update');
         const entity = Category.create({ name: 'Movie' });
-        repository.insert(entity);
+        await repository.insert(entity);
 
         const input: UpdateCategoryInput = {
             id: entity.categoryId.id,
