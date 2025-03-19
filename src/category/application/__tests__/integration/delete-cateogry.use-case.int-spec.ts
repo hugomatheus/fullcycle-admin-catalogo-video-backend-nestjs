@@ -19,7 +19,7 @@ describe("DeleteCategoryUseCase Integration tests", () => {
 
   it("should throw delete a category", async () => {
     const uuid = new Uuid();
-    await expect(useCase.execute(uuid)).rejects.toThrow(
+    await expect(useCase.execute({id: uuid.id})).rejects.toThrow(
       new NotFoundError(uuid, Category)
     );
   });
